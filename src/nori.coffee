@@ -74,5 +74,11 @@ class Nori
 
 		foundBean
 
-# Make it global
-window.Nori = Nori
+	# Global Nori reference
+	oldNori = window.Nori
+	window.Nori = Nori
+
+	# Return Nori reference and restore global one
+	@noConflict: ->
+		window.Nori = oldNori
+		Nori
