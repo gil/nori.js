@@ -43,13 +43,8 @@ class Nori
 			for param in bean.constructor
 				constructorParams.push @instance(param)
 		
-		# Create dummy class, to allow applying constructor params
-		beanProxy = ->
-		beanProxy.prototype = bean.type.prototype
-
 		# Apply constructor params to new instance
-		instance = new beanProxy
-		bean.type.apply(instance, constructorParams)
+		instance = @_proxifyClass(bean.type, constructorParams)
 
 		# Set instance properties
 		if bean.properties instanceof Array
@@ -59,6 +54,16 @@ class Nori
 			for propertyName, beanName of bean.properties
 				instance[propertyName] = @instance(beanName)
 
+		instance
+
+	# Proxy class, to allow applying constructor params
+	BeanProxy: ->
+
+	# Proxify class while applying given params to constructor
+	_proxifyClass: (clazz, params) ->
+		@BeanProxy.prototype = clazz.prototype
+		instance = new @BeanProxy
+		clazz.apply(instance, params)
 		instance
 
 	# Find bean by name
