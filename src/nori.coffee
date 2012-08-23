@@ -41,8 +41,7 @@ class Nori
 		# Get instances for constructor params
 		if bean.constructor
 			for param in bean.constructor
-				do =>
-					constructorParams.push @instance(param)
+				constructorParams.push @instance(param)
 		
 		# Create dummy class, to allow applying constructor params
 		beanProxy = ->
@@ -55,12 +54,10 @@ class Nori
 		# Set instance properties
 		if bean.properties instanceof Array
 			for property in bean.properties
-				do =>
-					instance[property] = @instance(property)
+				instance[property] = @instance(property)
 		else if bean.properties instanceof Object
 			for propertyName, beanName of bean.properties
-				do =>
-					instance[propertyName] = @instance(beanName)
+				instance[propertyName] = @instance(beanName)
 
 		instance
 
@@ -69,8 +66,7 @@ class Nori
 		foundBean = null
 		
 		for bean in @beans
-			do ->
-				foundBean = bean if bean.name == beanName
+			foundBean = bean if bean.name == beanName
 
 		foundBean
 
