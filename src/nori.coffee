@@ -35,7 +35,7 @@ class Nori
 		null
 	
 	# Instantiate bean
-	_newInstance: (bean) =>
+	_newInstance: (bean) ->
 		constructorParams = []
 
 		# Get instances for constructor params
@@ -45,11 +45,11 @@ class Nori
 					constructorParams.push @instance(param)
 		
 		# Create dummy class, to allow applying constructor params
-		typeProxy = ->
-		typeProxy.prototype = bean.type.prototype
+		beanProxy = ->
+		beanProxy.prototype = bean.type.prototype
 
 		# Apply constructor params to new instance
-		instance = new typeProxy
+		instance = new beanProxy
 		bean.type.apply(instance, constructorParams)
 
 		# Set instance properties
