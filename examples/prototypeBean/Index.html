@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>nori.js</title>
+
+	<script src="../../build/nori.js"></script>
+	<script>
+
+		// Dog class
+		var Dog = function() {
+			this.name = "Rex"; // Default name
+		};
+
+		Dog.prototype.setName = function(name) {
+			this.name = name;
+		}
+
+		Dog.prototype.getName = function(name) {
+			return this.name;
+		}
+
+		// House class
+		var House = function() {};
+
+		House.prototype.getDog = function() {
+			return this.dog;
+		}
+
+		// Singleton (default) beans
+		var nori = new Nori();
+
+		nori.addBeans([
+			{
+				name: "dog",
+				type: Dog
+			},
+			{
+				name: "house",
+				type: House,
+				properties: ["dog"]
+			}
+		]);
+		
+		var house = nori.instance("house");
+		console.log( "House dog's name: " + house.getDog().getName() );
+		house.getDog().setName("Max");
+		console.log( "House dog's new name: " + house.getDog().getName() );
+
+		var dog = nori.instance("dog");
+		console.log( "Instance dog's name: " + dog.getName() );
+		console.log( "Same instance:", (house.getDog() == dog) );
+		console.log( "-------------" );
+
+		// Prototype (non-singleton) beans
+		var nori2 = new Nori();
+
+		nori2.addBeans([
+			{
+				name: "dog",
+				type: Dog,
+				singleton: false // Get a new instance every time
+			},
+			{
+				name: "house",
+				type: House,
+				properties: ["dog"]
+			}
+		]);
+		
+		var otherHouse = nori2.instance("house");
+		console.log( "House dog's name: " + otherHouse.getDog().getName() );
+		otherHouse.getDog().setName("Max");
+		console.log( "House dog's new name: " + otherHouse.getDog().getName() );
+
+		var otherDog = nori2.instance("dog");
+		console.log( "Instance dog's name: " + otherDog.getName() );
+		console.log( "Same instance:", (otherHouse.getDog() == otherDog) );
+
+	</script>
+
+</head>
+<body>
+
+	<h3>Open the console... ;)</h3>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>nori.js</title>
+
+	<script src="../../build/nori.js"></script>
+	<script>
+
+		// Dog class
+		var Dog = function() {
+			this.name = "Rex"; // Default name
+		};
+
+		Dog.prototype.setName = function(name) {
+			this.name = name;
+		}
+
+		Dog.prototype.getName = function(name) {
+			return this.name;
+		}
+
+		// House class
+		var House = function() {};
+
+		House.prototype.getDog = function() {
+			return this.dog;
+		}
+
+		// Configure beans
+		var nori = new Nori();
+
+		nori.addBeans([
+			{
+				name: "dog",
+				type: Dog
+			},
+			{
+				name: "house",
+				type: House,
+				properties: ["dog"]
+			}
+		]);
+		
+		// Get instances
+		var house = nori.instance("house");
+		console.log( "Dog's name: " + house.getDog().getName() );
+
+	</script>
+
+</head>
+<body>
+
+	<h3>Open the console... ;)</h3>
+
+</body>
+</html>
