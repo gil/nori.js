@@ -1,0 +1,13 @@
+{
+  "name": "nori.js",
+  "description": "JavaScript dependency injection framework.",
+  "version": "0.0.1",
+  "author": "André Gil (http://andregil.net/)",
+  "homepage": "https://github.com/gil/nori.js",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ]
+}
