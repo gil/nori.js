@@ -32,6 +32,7 @@
 
 		Nori.AOP.afterThrow(dog, "doSomething", function(adviceData, shouldBreak){
 			console.log( "LOG :: ERROR :: Unhandled exception from method \"" + adviceData.method + "\"! Exception message: " + adviceData.exception.message );
+			// throw adviceData.exception; // Intercepted, but throw exception anyway
 		});
 
 		Nori.AOP.afterFinally(dog, "doSomething", function(adviceData, shouldBreak){
