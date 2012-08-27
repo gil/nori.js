@@ -24,7 +24,7 @@ class Nori
 	# Return the instance of a bean
 	instance: (beanName) ->
 		bean = @_beanByName beanName
-		
+
 		if bean and bean.type
 			if bean.singleton == false
 				return @_newInstance bean
@@ -33,7 +33,7 @@ class Nori
 				return @instances[beanName]
 
 		null
-	
+
 	# Instantiate bean
 	_newInstance: (bean) ->
 		constructorParams = []
@@ -42,7 +42,7 @@ class Nori
 		if bean.constructor
 			for param in bean.constructor
 				constructorParams.push @instance(param)
-		
+
 		# Apply constructor params to new instance
 		instance = @_proxifyClass(bean.type, constructorParams)
 
@@ -69,7 +69,7 @@ class Nori
 	# Find bean by name
 	_beanByName: (beanName) ->
 		foundBean = null
-		
+
 		for bean in @beans
 			foundBean = bean if bean.name == beanName
 
