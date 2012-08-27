@@ -75,6 +75,9 @@ class Nori
 
 		foundBean
 
+	# AOP support
+	Nori.AOP = AOP
+
 	# Global Nori reference
 	oldNori = window.Nori
 	window.Nori = Nori
