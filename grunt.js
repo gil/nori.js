@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 					"* <%= pkg.name %> v<%= pkg.version %> - <%= grunt.template.today('yyyy-mm-dd') %> - <%= pkg.homepage %>\n" +
 					"* by <%= pkg.author %>\n" +
 					"*\n" +
-					"* Licensed under:\n" + 
+					"* Licensed under:\n" +
 					"*    <%= _.map(pkg.licenses, function(license){ return license.type + ' - ' + license.url; }).join('\n*    ') %>\n" +
 					"*/"
 		},
@@ -21,16 +21,22 @@ module.exports = function(grunt) {
 		coffee: {
 			build: {
 				src: ["src/*.coffee"],
-				dest: "build",
+				dest: "build/tmp"/*,
 				options: {
 					bare: false
-				}
+				}*/
 			}
 		},
 
 		concat: {
 			build: {
-				src: ["<banner>", "build/nori.js"],
+				src: [
+					"<banner>",
+					"src/build/scope_start.js",
+						"build/tmp/AOP.js",
+						"build/tmp/Nori.js",
+					"src/build/scope_end.js"
+				],
 				dest: "build/nori.js"
 			}
 		},
