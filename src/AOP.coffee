@@ -53,6 +53,25 @@ class AOP
 
 				handler.apply this, adviceArgs
 
+	# Apply a "around" advice. This advice can control the method execution and change arguments, when needed.
+	@around: (target, method, handler) ->
+
+		originalMethod = target[ method ]
+
+		target[ method ] = ->
+
+			originalArgs = arguments
+
+			adviceArgs = AOP._prepareArgs( {
+				method: method,
+				arguments: originalArgs,
+				invoke: =>
+					originalMethod.apply this, originalArgs
+
+			}, arguments )
+
+			handler.apply this, adviceArgs
+
 	# Return a new array with args to apply on advices
 	@_prepareArgs: (adviceData, args) ->
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>nori.js</title>
+
+	<script src="../../../build/nori.js"></script>
+	<script>
+
+		// Dog class
+		var Dog = function() {};
+
+		Dog.prototype.setBreed = function(breed, origin) {
+			console.log("Breed is now: " + breed + ", from: " + origin);
+		}
+
+		// Adding advices to log method calls
+		var dog = new Dog();
+
+		Nori.AOP.around(dog, "setBreed", function(adviceData, breed, origin){
+
+			// Log call
+			console.log( "LOG :: AROUND :: Trying to set breed \"" + breed + "\" and origin \"" + origin + "\"" );
+
+			// Let's always change the origin, to Brazil
+			adviceData.arguments[1] = "Brazil";
+
+			// If it's not Pit Bull
+			if( breed != "Pit Bull" ) {
+				adviceData.invoke();
+			} else {
+				console.log("Sorry, I don't like Pit Bulls... :(");
+			}
+
+		});
+
+		// Call method
+		dog.setBreed("Bulldog", "England");
+		dog.setBreed("Pit Bull", "American");
+
+	</script>
+
+</head>
+<body>
+
+	<h3>Open the console... ;)</h3>
+
+</body>
+</html>
