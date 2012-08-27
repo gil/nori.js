@@ -39,6 +39,7 @@ class AOP
 
 	# Apply a "afterFinally" advice, to be called after given method is called, regardless of it's success
 	@afterFinally: (target, method, handler) ->
+
 		originalMethod = target[ method ]
 
 		target[ method ] = ->
@@ -70,6 +71,13 @@ class AOP
 
 			}, arguments )
 
+			handler.apply this, adviceArgs
+
+	# Apply a "introduction" advice, that will replace given method.
+	@introduction: (target, method, handler) ->
+
+		target[ method ] = ->
+			adviceArgs = AOP._prepareArgs( {method: method}, arguments )
 			handler.apply this, adviceArgs
 
 	# Return a new array with args to apply on advices
