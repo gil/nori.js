@@ -5,8 +5,8 @@ class AOP
 
 		old_method = target[ method ]
 
-		target[ method ] = =>
-			adviceArgs = @_prepareArgs( method, arguments )
+		target[ method ] = ->
+			adviceArgs = AOP._prepareArgs( method, arguments )
 			handler.apply this, adviceArgs
 			old_method.apply this, arguments
 
