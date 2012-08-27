@@ -18,9 +18,13 @@
 		var dog = new Dog();
 		dog.setBreed("Pug", "China");
 
-		// Adding advice
+		// Adding advices
 		Nori.AOP.before(dog, "setBreed", function(methodName, breed, origin){
-			console.log("Calling \"" + methodName + "\" method to set new breed as \"" + breed + "\", and origin as \"" + origin + "\"");
+			console.log("BEFORE :: Calling \"" + methodName + "\" method to set new breed as \"" + breed + "\", and origin as \"" + origin + "\"");
+		});
+
+		Nori.AOP.after(dog, "setBreed", function(methodName, breed, origin){
+			console.log("AFTER :: Called \"" + methodName + "\" method to set new breed as \"" + breed + "\", and origin as \"" + origin + "\"");
 		});
 
 		// Call method again
