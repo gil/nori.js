@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>nori.js</title>
+
+	<script src="../../../build/nori.js"></script>
+	<script>
+
+		// Dog class
+		var Dog = function() {};
+
+		Dog.prototype.doSomething = function(shouldBreak) {
+
+			console.log("Doing something...");
+
+			if( shouldBreak ) {
+				this_will_break();
+			}
+		}
+
+		// Adding advices to log method calls
+		var dog = new Dog();
+
+		Nori.AOP.before(dog, "doSomething", function(adviceData, shouldBreak){
+			console.log( "LOG :: BEFORE :: Next \"" + adviceData.method + "\" call will " + (shouldBreak ? "" : "not ") + "break" );
+		});
+
+		Nori.AOP.after(dog, "doSomething", function(adviceData, shouldBreak){
+			console.log( "LOG :: AFTER :: Method \"" + adviceData.method + "\" was called" );
+		});
+
+		Nori.AOP.afterThrow(dog, "doSomething", function(adviceData, shouldBreak){
+			console.log( "LOG :: ERROR :: Unhandled exception from method \"" + adviceData.method + "\"! Exception message: " + adviceData.exception.message );
+		});
+
+		Nori.AOP.afterFinally(dog, "doSomething", function(adviceData, shouldBreak){
+			console.log( "LOG :: FINALLY :: Method \"" + adviceData.method + "\" execution finished " + (adviceData.failed ? "WITHOUT" : "WITH") + " success" );
+		});
+
+		// Call method again
+		dog.doSomething(false);
+		console.log("----------------------------------");
+		dog.doSomething(true);
+
+
+	</script>
+
+</head>
+<body>
+
+	<h3>Open the console... ;)</h3>
+
+</body>
+</html>
