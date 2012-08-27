@@ -25,12 +25,12 @@
 		// Call method
 		var dog = new Dog();
 
-		// Adding advices to log method calls, to all method names starting with "set". (RegExp = /set./)
-		Nori.AOP.before(dog, /set./, function(adviceData){
+		// Adding advices to log method calls, to all method names starting with "set". (RegExp = /^set.+$/)
+		Nori.AOP.before(dog, /^set.+$/, function(adviceData){
 			console.log("LOG :: BEFORE :: Calling \"" + adviceData.method + "\" method with adviceData + " + (arguments.length - 1) + " argument(s).", arguments );
 		});
 
-		Nori.AOP.after(dog, /set./, function(adviceData){
+		Nori.AOP.after(dog, /^set.+$/, function(adviceData){
 			console.log("LOG :: AFTER :: Calling \"" + adviceData.method + "\" method with adviceData + " + (arguments.length - 1) + " argument(s).", arguments );
 		});
 
