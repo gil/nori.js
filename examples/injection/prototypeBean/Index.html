@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
+
 	<title>nori.js</title>
 
-	<script src="../../build/nori.js"></script>
+	<script src="../../../build/nori.js"></script>
 	<script>
 
 		// Dog class
@@ -41,7 +41,7 @@
 				properties: ["dog"]
 			}
 		]);
-		
+
 		var house = nori.instance("house");
 		console.log( "House dog's name: " + house.getDog().getName() );
 		house.getDog().setName("Max");
@@ -67,7 +67,7 @@
 				properties: ["dog"]
 			}
 		]);
-		
+
 		var otherHouse = nori2.instance("house");
 		console.log( "House dog's name: " + otherHouse.getDog().getName() );
 		otherHouse.getDog().setName("Max");

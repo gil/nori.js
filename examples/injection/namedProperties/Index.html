@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
+
 	<title>nori.js</title>
 
-	<script src="../../build/nori.js"></script>
+	<script src="../../../build/nori.js"></script>
 	<script>
 
 		// Dog class
@@ -23,8 +23,8 @@
 		// House class
 		var House = function() {};
 
-		House.prototype.getDog = function() {
-			return this.dog;
+		House.prototype.getPet = function() {
+			return this.pet;
 		}
 
 		// Configure beans
@@ -38,13 +38,13 @@
 			{
 				name: "house",
 				type: House,
-				properties: ["dog"]
+				properties: {"pet": "dog"} // Inject "dog" bean in house's "pet" property.
 			}
 		]);
-		
+
 		// Get instances
 		var house = nori.instance("house");
-		console.log( "Dog's name: " + house.getDog().getName() );
+		console.log( "Pet's name: " + house.getPet().getName() );
 
 	</script>
 
