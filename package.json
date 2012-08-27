@@ -1,6 +1,6 @@
 {
   "name": "nori.js",
-  "description": "JavaScript dependency injection framework.",
+  "description": "Tiny and easy to use JavaScript Inversion of Control (IoC) framework",
   "version": "0.0.1",
   "author": "André Gil (http://andregil.net/)",
   "homepage": "https://github.com/gil/nori.js",
