@@ -89,3 +89,24 @@ class AOP
 			newArgs.push arg
 
 		newArgs
+
+# Using our AOP Class to implement Regular Expression support. Nice! ;)
+methods = ["before", "after", "afterThrow", "afterFinally", "around", "introduction"]
+
+for method in methods
+	AOP.around AOP, method, (adviceData, target, method, handler) ->
+
+		# Is "method" a RegExp?
+		if method instanceof RegExp
+
+			# For each target's method name
+			for methodName of target
+
+				# If it matches the RegExp, invoke advice with correct method name
+				if methodName.match(method)
+					adviceData.arguments[1] = methodName
+					adviceData.invoke()
+
+		else
+			# It's not a RegExp, so just invoke it
+			adviceData.invoke()

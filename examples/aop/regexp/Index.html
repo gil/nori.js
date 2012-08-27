@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>nori.js</title>
+
+	<script src="../../../build/nori.js"></script>
+	<script>
+
+		// Dog class
+		var Dog = function() {};
+
+		Dog.prototype.setName = function(name) {
+			console.log("Name is now: " + name);
+		}
+
+		Dog.prototype.setBreed = function(breed, origin) {
+			console.log("Breed is now: " + breed + ", from: " + origin);
+		}
+
+		Dog.prototype.bark = function(name) {
+			console.log("woof!");
+		}
+
+		// Call method
+		var dog = new Dog();
+
+		// Adding advices to log method calls, to all methods name starting with "set". (RegExp = /set./)
+		Nori.AOP.before(dog, /set./, function(adviceData){
+			console.log("LOG :: BEFORE :: Calling \"" + adviceData.method + "\" method with adviceData + " + (arguments.length - 1) + " argument(s).", arguments );
+		});
+
+		Nori.AOP.after(dog, /set./, function(adviceData){
+			console.log("LOG :: AFTER :: Calling \"" + adviceData.method + "\" method with adviceData + " + (arguments.length - 1) + " argument(s).", arguments );
+		});
+
+		// Call method again
+		dog.setName("Rex");
+		dog.setBreed("Bulldog", "England");
+		dog.bark();
+
+	</script>
+
+</head>
+<body>
+
+	<h3>Open the console... ;)</h3>
+
+</body>
+</html>
