@@ -54,6 +54,11 @@ class Nori
 			for propertyName, beanName of bean.properties
 				instance[propertyName] = @instance(beanName)
 
+		# Read and apply AOP advices
+		if bean.advices
+			for advice in bean.advices
+				AOP[advice.type]( instance, advice.method, @instance(advice.handler)[ advice.handlerMethod ] );
+
 		instance
 
 	# Proxy class, to allow applying constructor params

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>nori.js</title>
+
+	<script src="../../../build/nori.js"></script>
+	<script>
+
+		// Dog class
+		var Dog = function() {
+			this.name = "Rex"; // Default name
+		};
+
+		Dog.prototype.setName = function(name) {
+			console.log("Name is now: " + name);
+		}
+
+		Dog.prototype.setBreed = function(breed, origin) {
+			console.log("Breed is now: " + breed + ", from: " + origin);
+		}
+
+		Dog.prototype.bark = function(name) {
+			console.log("woof!");
+		}
+
+		// Logger class
+		var Logger = function() {};
+
+		Logger.prototype.logMethodCall = function(adviceData) {
+			console.log("LOG :: Calling method \"" + adviceData.method + "\", with " + adviceData.arguments.length + " parameter(s).", adviceData.arguments);
+			adviceData.invoke();
+		}
+
+		// Configure beans
+		var nori = new Nori();
+
+		nori.addBeans([
+			{
+				name: "dog",
+				type: Dog,
+				advices: [
+					{
+						type: "around", // "Around" advice
+						method: /^set.+$/, // Intercept all method names starting with "set"
+						handler: "logger", // Bean that will handle the advice
+						handlerMethod: "logMethodCall" // Bean method to handle advice
+					}
+				]
+			},
+			{
+				name: "logger",
+				type: Logger
+			}
+		]);
+
+		// Get instances
+		var dog = nori.instance("dog");
+		dog.setName("Rex");
+		dog.setBreed("Bulldog", "England");
+		dog.bark();
+
+	</script>
+
+</head>
+<body>
+
+	<h3>Open the console... ;)</h3>
+
+</body>
+</html>
