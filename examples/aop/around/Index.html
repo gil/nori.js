@@ -12,6 +12,7 @@
 
 		Dog.prototype.setBreed = function(breed, origin) {
 			console.log("Breed is now: " + breed + ", from: " + origin);
+			return true;
 		}
 
 		// Adding advices to log method calls
@@ -27,7 +28,10 @@
 
 			// If it's not Pit Bull
 			if( breed != "Pit Bull" ) {
-				adviceData.invoke();
+
+				var result = adviceData.invoke();
+				console.log("Method returned: " + result);
+
 			} else {
 				console.log("Sorry, I don't like Pit Bulls... :(");
 			}
