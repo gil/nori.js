@@ -223,5 +223,83 @@ describe("AOP", function() {
 		expect( finallyCalled ).toBeTruthy();
 	});
 
+	it("should apply advices during injection container bean configuration", function() {
+
+		var calls = [];
+
+		// Mock method
+		Dog.prototype.bark = function() {
+			calls.push(2);
+		}
+
+		// Create handler bean
+		var Logger = function() {};
+
+		Logger.prototype.logMethodCall = function() {
+			calls.push(1);
+		}
+
+		var nori = new Nori();
+		nori.addBeans([
+			{
+				name: "dog",
+				type: Dog,
+				advices: [
+					{
+						type: "before",
+						method: "bark",
+						handler: "logger",
+						handlerMethod: "logMethodCall"
+					}
+				]
+			},
+			{
+				name: "logger",
+				type: Logger
+			}
+		]);
+
+		var dog = nori.instance("dog");
+
+		dog.bark();
+		expect( calls ).toHaveTotalOf( 2 );
+		expect( calls ).toBeInOrder();
+	});
+
+	it("should be able to add advice to multiple functions by matching with Regular Expressions", function() {
+
+		var calls = [];
+
+		// Mock method
+		Dog.prototype.setName = function(name) {
+			calls.push(2);
+		}
+
+		Dog.prototype.setBreed = function(breed) {
+			calls.push(4);
+		}
+
+		Dog.prototype.bark = function() {
+			calls.push(5);
+		}
+
+		var dog = new Dog();
+
+		Nori.AOP.before(dog, /^set.+$/, function(adviceData){
+			if( adviceData.method === "setName" ) {
+				calls.push(1);
+			} else if( adviceData.method === "setBreed" ) {
+				calls.push(3);
+			}
+		});
+
+		dog.setName("Reg");
+		dog.setBreed("Bulldog");
+		dog.bark();
+
+		expect( calls ).toHaveTotalOf( 5 );
+		expect( calls ).toBeInOrder();
+	});
+
 });
 
