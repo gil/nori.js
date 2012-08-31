@@ -6,7 +6,7 @@ describe("Dependency injection instantiation", function() {
 		Dog = function() {};
 	});
 
-	it("should be able to instantiate beans", function() {
+	it("should instantiate beans", function() {
 
 		var nori = new Nori();
 		nori.addBean({ name: "dog", type: Dog });
@@ -15,7 +15,7 @@ describe("Dependency injection instantiation", function() {
 		expect( dog ).toBeInstanceof( Dog );
 	});
 
-	it("should be able to instantiate singleton beans by default", function() {
+	it("should instantiate singleton beans by default", function() {
 
 		var nori = new Nori();
 		nori.addBean({ name: "dog", type: Dog });
@@ -26,7 +26,7 @@ describe("Dependency injection instantiation", function() {
 		expect( firstDog ).toBe( secondDog );
 	});
 
-	it("should be able to instantiate singleton beans", function() {
+	it("should instantiate singleton beans", function() {
 
 		var nori = new Nori();
 		nori.addBean({ name: "dog", type: Dog, singleton: true });
@@ -37,7 +37,7 @@ describe("Dependency injection instantiation", function() {
 		expect( firstDog ).toBe( secondDog );
 	});
 
-	it("should be able to instantiate prototype beans", function() {
+	it("should instantiate prototype beans", function() {
 
 		var nori = new Nori();
 		nori.addBean({ name: "dog", type: Dog, singleton: false });
@@ -48,7 +48,7 @@ describe("Dependency injection instantiation", function() {
 		expect( firstDog ).not.toBe( secondDog );
 	});
 
-	it("should be able to have multiple beans for the same type", function() {
+	it("should have multiple beans for the same type", function() {
 
 		var nori = new Nori();
 		nori.addBeans([
@@ -63,7 +63,7 @@ describe("Dependency injection instantiation", function() {
 		expect( bulldog ).toBeInstanceof( Dog );
 	});
 
-	it("should be able to have multiple beans for the same type, with different settings", function() {
+	it("should have multiple beans for the same type, with different settings", function() {
 
 		var nori = new Nori();
 		nori.addBeans([

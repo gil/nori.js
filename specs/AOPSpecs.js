@@ -12,7 +12,7 @@ describe("AOP", function() {
 
 	});
 
-	it("should be able to add \"before\" advice to function", function() {
+	it("should add \"before\" advice to function", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -29,7 +29,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add \"after\" advice to function", function() {
+	it("should add \"after\" advice to function", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -46,7 +46,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add multiple advices to function", function() {
+	it("should add multiple advices to function", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -67,7 +67,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add \"introduction\" advice to function", function() {
+	it("should add \"introduction\" advice to function", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -84,7 +84,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add \"around\" advice to function", function() {
+	it("should add \"around\" advice to function", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -103,7 +103,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add \"around\" advice to function and capture returned value", function() {
+	it("should add \"around\" advice to function and capture returned value", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -121,7 +121,7 @@ describe("AOP", function() {
 		expect( returned ).toBeTruthy();
 	});
 
-	it("should be able to add \"around\" advice to function and read arguments", function() {
+	it("should add \"around\" advice to function and read arguments", function() {
 
 		// Mock method
 		Dog.prototype.bark = function(times) {}
@@ -138,7 +138,7 @@ describe("AOP", function() {
 		expect( barkCount ).toEqual( 3 );
 	});
 
-	it("should be able to add \"around\" advice to function and change arguments", function() {
+	it("should add \"around\" advice to function and change arguments", function() {
 
 		// Mock method
 		var barkCount = null;
@@ -158,7 +158,7 @@ describe("AOP", function() {
 		expect( barkCount ).toEqual( 10 );
 	});
 
-	it("should be able to add \"afterThrow\" advice to function and handle unhandled exceptions", function() {
+	it("should add \"afterThrow\" advice to function and handle unhandled exceptions", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -176,7 +176,7 @@ describe("AOP", function() {
 		expect( exception ).toBeInstanceof( Error );
 	});
 
-	it("should be able to add \"afterFinally\" advice to function and do something after an exception was thrown", function() {
+	it("should add \"afterFinally\" advice to function and do something after an exception was thrown", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {
@@ -197,7 +197,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add \"afterFinally\" advice to function and do something even when there wasn't any exception being thrown", function() {
+	it("should add \"afterFinally\" advice to function and do something even when there wasn't any exception being thrown", function() {
 
 		// Mock method
 		Dog.prototype.bark = function() {}
@@ -252,7 +252,7 @@ describe("AOP", function() {
 		expect().methodsCalledInOrder();
 	});
 
-	it("should be able to add advice to multiple functions by matching with Regular Expressions", function() {
+	it("should add advice to multiple functions by matching with Regular Expressions", function() {
 
 		// Mock method
 		Dog.prototype.setName = function(name) {
