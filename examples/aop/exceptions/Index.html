@@ -36,7 +36,7 @@
 		});
 
 		Nori.AOP.afterFinally(dog, "doSomething", function(adviceData, shouldBreak){
-			console.log( "LOG :: FINALLY :: Method \"" + adviceData.method + "\" execution finished " + (adviceData.failed ? "WITHOUT" : "WITH") + " success" );
+			console.log( "LOG :: FINALLY :: Method \"" + adviceData.method + "\" execution finished" );
 		});
 
 		// Call method again

@@ -1,5 +1,5 @@
 /*
-* nori.js v0.0.1 - 2012-08-27 - https://github.com/gil/nori.js
+* nori.js v0.0.1 - 2012-08-30 - https://github.com/gil/nori.js
 * by André Gil (http://andregil.net/)
 *
 * Licensed under:
@@ -65,8 +65,7 @@ AOP = (function() {
         return originalMethod.apply(this, arguments);
       } finally {
         adviceArgs = AOP._prepareArgs({
-          method: method,
-          failed: arguments[0]
+          method: method
         }, arguments);
         handler.apply(this, adviceArgs);
       }

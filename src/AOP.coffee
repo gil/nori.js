@@ -46,12 +46,7 @@ class AOP
 			try
 				originalMethod.apply this, arguments
 			finally
-
-				adviceArgs = AOP._prepareArgs( {
-					method: method,
-					failed: arguments[0]
-				}, arguments )
-
+				adviceArgs = AOP._prepareArgs( {method: method}, arguments )
 				handler.apply this, adviceArgs
 
 	# Apply a "around" advice. This advice can control the method execution and change arguments, when needed.
