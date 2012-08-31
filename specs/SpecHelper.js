@@ -1,4 +1,17 @@
+var shouldBeCalledAtOrder, shouldNotBeCalled;
+
 beforeEach(function() {
+
+	var methodCalls = [];
+
+	shouldBeCalledAtOrder = function(order) {
+		methodCalls.push( order );
+	}
+
+	shouldNotBeCalled = function() {
+		methodCalls.push( "!" );
+	}
+
 	this.addMatchers({
 
 		// Compare instanceof expected class
@@ -11,34 +24,42 @@ beforeEach(function() {
 			return (this.actual instanceof expectedClass);
 		},
 
-		// Count number of calls in array
-		toHaveTotalOf: function(expectedCalls) {
+		// Check if all methods were called in correct order
+		methodsCalledInOrder: function() {
 
-			var totalCalls = (this.actual ? this.actual.length : 0);
+			var outOfOrder = false;
+			var wrongMethodCalled = false;
 
-			this.message = function () {
-				var notText = this.isNot ? " not " : "";
-				return "Expected " + notText + expectedCalls + " calls, but got " + totalCalls + " calls!";
-			}
+			if( methodCalls.length > 0 ) {
+				for( var i = 0; i < methodCalls.length; i++ ) {
 
-			return (totalCalls === expectedCalls);
-		},
+					if( methodCalls[i] === "!" ) {
 
-		// Check if array is in order, starting with 1
-		toBeInOrder: function() {
+						wrongMethodCalled = true;
+						break;
 
-			this.message = function () {
-				var notText = this.isNot ? " not" : "";
-				return "Expected calls" + notText + " to be in order!";
-			}
+					} else if( methodCalls[i] !== i + 1 ) {
 
-			for( var i = 0; i < this.actual.length; i++ ) {
-				if( this.actual[i] !== i + 1 ) {
-					return false;
+						outOfOrder = true;
+						break;
+					}
+
 				}
 			}
 
-			return true;
+			this.message = function () {
+				var notText = this.isNot ? " not" : "";
+
+				if( methodCalls.length < 1 ) {
+					return "No method called!";
+				} else if( outOfOrder ) {
+					return "Expected calls" + notText + " to be in order!";
+				} else if( wrongMethodCalled ){
+					return "A method that wasn't supposed to be called was called!";
+				}
+			}
+
+			return ( methodCalls.length > 0 && !outOfOrder && !wrongMethodCalled );
 		}
 
 	});

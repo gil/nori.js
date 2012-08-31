@@ -14,102 +14,93 @@ describe("AOP", function() {
 
 	it("should be able to add \"before\" advice to function", function() {
 
-		var calls = [];
-
 		// Mock method
 		Dog.prototype.bark = function() {
-			calls.push(2);
+			shouldBeCalledAtOrder(2);
 		}
 
 		var dog = new Dog();
 
 		Nori.AOP.before(dog, "bark", function(){
-			calls.push(1);
+			shouldBeCalledAtOrder(1);
 		});
 
 		dog.bark();
-		expect( calls ).toHaveTotalOf( 2 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add \"after\" advice to function", function() {
 
-		var calls = [];
-
 		// Mock method
 		Dog.prototype.bark = function() {
-			calls.push(1);
+			shouldBeCalledAtOrder(1);
 		}
 
 		var dog = new Dog();
 
 		Nori.AOP.after(dog, "bark", function(){
-			calls.push(2);
+			shouldBeCalledAtOrder(2);
 		});
 
 		dog.bark();
-		expect( calls ).toHaveTotalOf( 2 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add multiple advices to function", function() {
 
-		var calls = [];
-
 		// Mock method
 		Dog.prototype.bark = function() {
-			calls.push(2);
+			shouldBeCalledAtOrder(2);
 		}
 
 		var dog = new Dog();
 
 		Nori.AOP.before(dog, "bark", function(){
-			calls.push(1);
+			shouldBeCalledAtOrder(1);
 		});
 
 		Nori.AOP.after(dog, "bark", function(){
-			calls.push(3);
+			shouldBeCalledAtOrder(3);
 		});
 
 		dog.bark();
-		expect( calls ).toHaveTotalOf( 3 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add \"introduction\" advice to function", function() {
 
-		var calls = [];
+		// Mock method
+		Dog.prototype.bark = function() {
+			shouldNotBeCalled();
+		}
+
 		var dog = new Dog();
 
 		Nori.AOP.introduction(dog, "bark", function(){
-			calls.push(1);
+			shouldBeCalledAtOrder(1);
 		});
 
 		dog.bark();
-		expect( calls ).toHaveTotalOf( 1 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add \"around\" advice to function", function() {
 
-		var calls = [];
-
 		// Mock method
 		Dog.prototype.bark = function() {
-			calls.push(2);
+			shouldBeCalledAtOrder(2);
 		}
 
 		var dog = new Dog();
 
 		Nori.AOP.around(dog, "bark", function(adviceData){
-			calls.push(1);
+			shouldBeCalledAtOrder(1);
 			adviceData.invoke();
-			calls.push(3);
+			shouldBeCalledAtOrder(3);
 		});
 
 		dog.bark();
-		expect( calls ).toHaveTotalOf( 3 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add \"around\" advice to function and capture returned value", function() {
@@ -193,18 +184,17 @@ describe("AOP", function() {
 		}
 
 		var dog = new Dog();
-		var finallyCalled = false;
 
 		Nori.AOP.afterThrow(dog, "bark", function(){
 			// Got an exception, did nothing
 		});
 
 		Nori.AOP.afterFinally(dog, "bark", function(){
-			finallyCalled = true;
+			shouldBeCalledAtOrder(1);
 		});
 
 		dog.bark();
-		expect( finallyCalled ).toBeTruthy();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add \"afterFinally\" advice to function and do something even when there wasn't any exception being thrown", function() {
@@ -213,30 +203,27 @@ describe("AOP", function() {
 		Dog.prototype.bark = function() {}
 
 		var dog = new Dog();
-		var finallyCalled = false;
 
 		Nori.AOP.afterFinally(dog, "bark", function(){
-			finallyCalled = true;
+			shouldBeCalledAtOrder(1);
 		});
 
 		dog.bark();
-		expect( finallyCalled ).toBeTruthy();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should apply advices during injection container bean configuration", function() {
 
-		var calls = [];
-
 		// Mock method
 		Dog.prototype.bark = function() {
-			calls.push(2);
+			shouldBeCalledAtOrder(2);
 		}
 
 		// Create handler bean
 		var Logger = function() {};
 
 		Logger.prototype.logMethodCall = function() {
-			calls.push(1);
+			shouldBeCalledAtOrder(1);
 		}
 
 		var nori = new Nori();
@@ -262,34 +249,33 @@ describe("AOP", function() {
 		var dog = nori.instance("dog");
 
 		dog.bark();
-		expect( calls ).toHaveTotalOf( 2 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 	it("should be able to add advice to multiple functions by matching with Regular Expressions", function() {
 
-		var calls = [];
-
 		// Mock method
 		Dog.prototype.setName = function(name) {
-			calls.push(2);
+			shouldBeCalledAtOrder(2);
 		}
 
 		Dog.prototype.setBreed = function(breed) {
-			calls.push(4);
+			shouldBeCalledAtOrder(4);
 		}
 
 		Dog.prototype.bark = function() {
-			calls.push(5);
+			shouldBeCalledAtOrder(5);
 		}
 
 		var dog = new Dog();
 
 		Nori.AOP.before(dog, /^set.+$/, function(adviceData){
 			if( adviceData.method === "setName" ) {
-				calls.push(1);
+				shouldBeCalledAtOrder(1);
 			} else if( adviceData.method === "setBreed" ) {
-				calls.push(3);
+				shouldBeCalledAtOrder(3);
+			} else {
+				shouldNotBeCalled();
 			}
 		});
 
@@ -297,8 +283,7 @@ describe("AOP", function() {
 		dog.setBreed("Bulldog");
 		dog.bark();
 
-		expect( calls ).toHaveTotalOf( 5 );
-		expect( calls ).toBeInOrder();
+		expect().methodsCalledInOrder();
 	});
 
 });
