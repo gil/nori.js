@@ -168,63 +168,83 @@ Nori = (function() {
   };
 
   Nori.prototype.instance = function(beanName) {
-    var bean;
+    var bean, instance, newInstance;
     bean = this._beanByName(beanName);
+    newInstance = false;
+    instance = null;
     if (bean && bean.type) {
       if (bean.singleton === false) {
-        return this._newInstance(bean);
+        instance = this._proxifyClass(bean.type);
+        newInstance = true;
       } else {
-        if (!this.instances[beanName]) {
-          this.instances[beanName] = this._newInstance(bean);
+        if (this.instances[beanName]) {
+          instance = this.instances[beanName];
+        } else {
+          instance = this.instances[beanName] = this._proxifyClass(bean.type);
+          newInstance = true;
         }
-        return this.instances[beanName];
       }
     }
-    return null;
-  };
-
-  Nori.prototype._newInstance = function(bean) {
-    var advice, beanName, constructorParams, instance, param, property, propertyName, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
-    constructorParams = [];
-    if (bean.constructor) {
-      _ref = bean.constructor;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        param = _ref[_i];
-        constructorParams.push(this.instance(param));
-      }
-    }
-    instance = this._proxifyClass(bean.type, constructorParams);
-    if (bean.properties instanceof Array) {
-      _ref1 = bean.properties;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        property = _ref1[_j];
-        instance[property] = this.instance(property);
-      }
-    } else if (bean.properties instanceof Object) {
-      _ref2 = bean.properties;
-      for (propertyName in _ref2) {
-        beanName = _ref2[propertyName];
-        instance[propertyName] = this.instance(beanName);
-      }
-    }
-    if (bean.advices) {
-      _ref3 = bean.advices;
-      for (_k = 0, _len2 = _ref3.length; _k < _len2; _k++) {
-        advice = _ref3[_k];
-        AOP[advice.type](instance, advice.method, this.instance(advice.handler)[advice.handlerMethod]);
-      }
+    if (instance && newInstance) {
+      this._applyConstructor(instance, bean);
+      this._injectProperties(instance, bean);
+      this._readAdvices(instance, bean);
     }
     return instance;
+  };
+
+  Nori.prototype._injectProperties = function(instance, bean) {
+    var beanName, property, propertyName, _i, _len, _ref, _ref1, _results, _results1;
+    if (bean.properties instanceof Array) {
+      _ref = bean.properties;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        property = _ref[_i];
+        _results.push(instance[property] = this.instance(property));
+      }
+      return _results;
+    } else if (bean.properties instanceof Object) {
+      _ref1 = bean.properties;
+      _results1 = [];
+      for (propertyName in _ref1) {
+        beanName = _ref1[propertyName];
+        _results1.push(instance[propertyName] = this.instance(beanName));
+      }
+      return _results1;
+    }
+  };
+
+  Nori.prototype._readAdvices = function(instance, bean) {
+    var advice, _i, _len, _ref, _results;
+    if (bean.advices) {
+      _ref = bean.advices;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        advice = _ref[_i];
+        _results.push(AOP[advice.type](instance, advice.method, this.instance(advice.handler)[advice.handlerMethod]));
+      }
+      return _results;
+    }
   };
 
   Nori.prototype.BeanProxy = function() {};
 
-  Nori.prototype._proxifyClass = function(clazz, params) {
-    var instance;
+  Nori.prototype._proxifyClass = function(clazz) {
     this.BeanProxy.prototype = clazz.prototype;
-    instance = new this.BeanProxy;
-    clazz.apply(instance, params);
-    return instance;
+    return new this.BeanProxy;
+  };
+
+  Nori.prototype._applyConstructor = function(instance, bean) {
+    var arg, args, _i, _len, _ref;
+    args = [];
+    if (bean.constructor) {
+      _ref = bean.constructor;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        arg = _ref[_i];
+        args.push(this.instance(arg));
+      }
+    }
+    return bean.type.apply(instance, args);
   };
 
   Nori.prototype._beanByName = function(beanName) {

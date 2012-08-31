@@ -25,28 +25,29 @@ class Nori
 	instance: (beanName) ->
 		bean = @_beanByName beanName
 
+		newInstance = false
+		instance = null
+
 		if bean and bean.type
-			if bean.singleton == false
-				return @_newInstance bean
+			if bean.singleton is false
+				instance = @_proxifyClass( bean.type )
+				newInstance = true
 			else
-				@instances[beanName] = @_newInstance(bean) unless @instances[beanName]
-				return @instances[beanName]
+				if @instances[beanName]
+					instance = @instances[beanName]
+				else
+					instance = @instances[beanName] = @_proxifyClass( bean.type )
+					newInstance = true
 
-		null
+		if instance and newInstance
+			@_applyConstructor( instance, bean )
+			@_injectProperties( instance, bean )
+			@_readAdvices( instance, bean )
 
-	# Instantiate bean
-	_newInstance: (bean) ->
-		constructorParams = []
+		instance
 
-		# Get instances for constructor params
-		if bean.constructor
-			for param in bean.constructor
-				constructorParams.push @instance(param)
-
-		# Apply constructor params to new instance
-		instance = @_proxifyClass(bean.type, constructorParams)
-
-		# Set instance properties
+	# Inject instance properties
+	_injectProperties: (instance, bean) ->
 		if bean.properties instanceof Array
 			for property in bean.properties
 				instance[property] = @instance(property)
@@ -54,22 +55,29 @@ class Nori
 			for propertyName, beanName of bean.properties
 				instance[propertyName] = @instance(beanName)
 
-		# Read and apply AOP advices
+	# Read and apply AOP advices
+	_readAdvices: (instance, bean) ->
 		if bean.advices
 			for advice in bean.advices
 				AOP[advice.type]( instance, advice.method, @instance(advice.handler)[ advice.handlerMethod ] );
 
-		instance
-
 	# Proxy class, to allow applying constructor params
 	BeanProxy: ->
 
-	# Proxify class while applying given params to constructor
-	_proxifyClass: (clazz, params) ->
+	# Proxify class
+	_proxifyClass: (clazz) ->
 		@BeanProxy.prototype = clazz.prototype
-		instance = new @BeanProxy
-		clazz.apply(instance, params)
-		instance
+		new @BeanProxy
+
+	# Apply constructor arguments to given proxified instance
+	_applyConstructor: (instance, bean) ->
+		args = []
+
+		if bean.constructor
+			for arg in bean.constructor
+				args.push @instance(arg)
+
+		bean.type.apply(instance, args)
 
 	# Find bean by name
 	_beanByName: (beanName) ->

@@ -81,5 +81,54 @@ describe("Dependency injection via property", function() {
 		expect( house.firstPet ).not.toBe( house.secondPet );
 	});
 
+	it("should inject recursive properties", function() {
+
+		var nori = new Nori();
+		nori.addBeans([
+			{ name: "house", type: House, properties: ["owner"] },
+			{ name: "owner", type: Owner, properties: ["house"] }
+		]);
+
+		var house = nori.instance("house");
+		var owner = nori.instance("owner");
+
+		expect( house.owner ).toBe( owner );
+		expect( owner.house ).toBe( house );
+	});
+
+	it("should inject complex recursive properties", function() {
+
+		var nori = new Nori();
+		nori.addBeans([
+			{ name: "house", type: House, properties: ["owner", "dog"] },
+			{ name: "owner", type: Owner, properties: ["house", "dog"] },
+			{ name: "dog", type: Dog, properties: ["house", "owner"] },
+		]);
+
+		var house = nori.instance("house");
+		var owner = nori.instance("owner");
+		var dog = nori.instance("dog");
+
+		expect( house.owner ).toBe( owner );
+		expect( house.dog ).toBe( dog );
+
+		expect( owner.house ).toBe( house );
+		expect( owner.dog ).toBe( dog );
+
+		expect( dog.house ).toBe( house );
+		expect( dog.owner ).toBe( owner );
+	});
+
+	it("should inject self recursive properties", function() {
+
+		var nori = new Nori();
+		nori.addBeans([
+			{ name: "house", type: House, properties: ["house"] }
+		]);
+
+		var house = nori.instance("house");
+		expect( house.house ).toBe( house );
+	});
+
 });
 
